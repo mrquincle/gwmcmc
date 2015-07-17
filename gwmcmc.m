@@ -90,15 +90,21 @@ if size(minit,2)==1
     minit=bsxfun(@plus,minit,randn(M,M*5));
 end
 
-
+isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
+if (isOctave)
+    p.StepSize=2.5;
+    p.ThinChain=10;
+    p.ProgressBar=false;
+    p.Parallel=false;
+else
 p=inputParser;
-p.addParameter('StepSize',2.5,@isnumeric);
-p.addParameter('ThinChain',10,@isnumeric);
-p.addParameter('ProgressBar',true,@islogical);
-p.addParameter('Parallel',false,@islogical);
-p.parse(varargin{:});
-p=p.Results;
-
+    p.addOptional('StepSize',2.5,@isnumeric);
+    p.addOptional('ThinChain',10,@isnumeric);
+    p.addOptional('ProgressBar',true,@islogical);
+    p.addOptional('Parallel',false,@islogical);
+    p.parse(varargin{:});
+    p=p.Results;
+end
 
 Nwalkers=size(minit,2);
 
